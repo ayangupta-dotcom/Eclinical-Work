@@ -1,0 +1,63 @@
+// CoucheBase Implemnentation
+
+Replicate Dataset in Analytics tab:
+
+___________________________________
+
+
+
+
+Query 1
+
+The below query provides information about the number of appointments registered in each month.
+
+FROM Appointment
+GROUP BY DATE_PART_STR(appointmentTimestamp, "month")
+SELECT COUNT(*) AS NumberOfAppointments,
+       DATE_PART_STR(appointmentTimestamp, "month") AS monthNumber
+
+
+Query 2
+The below query yields information about the details of the patient which includes patient name, blood group, phone number, gender, assigned doctor name and timestamp etc.
+FROM Report AS r,
+               Patient AS p,
+               Doctor AS d,
+               Appointment AS a,
+               DoctorProvidesReport AS dpr
+WHERE p.patientId = r.patientId
+  AND d.appointmentId = a.appointmentId
+  AND d.doctorId = dpr.doctorId
+  AND r.reportId = dpr.reportId SELECT p.patientName,
+                                     p.bloodGroup,
+                                     p.phone,
+                                     p.genderCode,
+                                     d.doctorName,
+                                     a.appointmentTimestamp AS AppointmentDate,
+                                     r.description,
+                                     r.caseHistory
+
+
+Query 3
+The below query gives information about the month wise count of payments and total amount received.
+
+FROM Payment
+GROUP BY DATE_PART_STR(paymentTimestamp, "month")
+SELECT COUNT(*) AS NumberOfPayments,
+       SUM(Amount) AS TotalCashReceived,
+       DATE_PART_STR(paymentTimestamp, "month") AS paymentMonth
+
+
+
+// Window Function
+
+Query1
+Window function to find the average amount in the Payment Bucket.
+FROM Payment select avg(amount) as avg_payment;
+
+Query2
+Window Function to find the minimum amount in the Payment Bucket.
+FROM Payment select min(amount) as min_amount;
+
+
+
+
